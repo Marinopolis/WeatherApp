@@ -17,11 +17,15 @@ The Weather App is a simple Java application that provides real-time weather inf
 1. Clone the repository to your local machine.
    ```bash
    git clone https://github.com/your-username/weather-app.git
-
+   ```
 1 Open the project in your preferred Java IDE.
-2 Run the AppLaunch class to launch the Weather App.
-3 Enter the desired location in the search field and click the search button.
-4 View the real-time weather information displayed on the GUI.
+
+
+ 2 Run the AppLaunch class to launch the Weather App.
+  
+ 3 Enter the desired location in the search field and click the search button.
+
+ 4 View the real-time weather information displayed on the GUI.
 
 ## Dependencies
     JSON Simple: A simple Java toolkit for JSON.
