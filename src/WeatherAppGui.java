@@ -11,90 +11,65 @@ import java.io.IOException;
 
 public class WeatherAppGui extends JFrame {
     private JSONObject weatherData;
+    private Theme currentTheme;
+
     public WeatherAppGui() {
-        //setup gui
         super("Weather App");
-
-        //Configure gui
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        //set the size of gui
         setSize(450, 650);
-
-        //load our gui
         setLocationRelativeTo(null);
-
-        //make our layout
         setLayout(null);
-
-        //prevent any reize
         setResizable(false);
+
+        // Set default theme
+        setTheme(createDefaultTheme());
+
         addGuiComponents();
-
     }
+
     private void addGuiComponents() {
-      // search field
         JTextField searchTextField = new JTextField();
-
-        // set the location
-        searchTextField.setBounds(15,15,351,45);
-
-        // change the font style and size
-        searchTextField.setFont(new Font("Dialog",Font.PLAIN,24));
-
+        searchTextField.setBounds(15, 15, 351, 45);
+        searchTextField.setFont(new Font("Dialog", Font.PLAIN, 24));
         add(searchTextField);
 
-
-
-        //WeatherImage
         JLabel weatherConditionImage = new JLabel(loadImage("src/assets/cloudy.png"));
-        weatherConditionImage.setBounds(0,125,450,217);
+        weatherConditionImage.setBounds(0, 125, 450, 217);
         add(weatherConditionImage);
 
-        // temperature text
         JLabel temperatureText = new JLabel("10 C");
-        temperatureText.setBounds(0,350,450,54);
-        temperatureText.setFont(new Font("Dialog", Font.BOLD,48));
-
-        // Center
+        temperatureText.setBounds(0, 350, 450, 54);
+        temperatureText.setFont(new Font("Dialog", Font.BOLD, 48));
         temperatureText.setHorizontalAlignment(SwingConstants.CENTER);
         add(temperatureText);
 
-        // weather condition description
         JLabel weatherConditionDesc = new JLabel("Cloudy");
-        weatherConditionDesc.setBounds(0,405,450,36);
-        weatherConditionDesc.setFont(new Font("Dialog", Font.PLAIN,32));
+        weatherConditionDesc.setBounds(0, 405, 450, 36);
+        weatherConditionDesc.setFont(new Font("Dialog", Font.PLAIN, 32));
         weatherConditionDesc.setHorizontalAlignment(SwingConstants.CENTER);
         add(weatherConditionDesc);
 
-        //humidity image
         JLabel humidityImage = new JLabel(loadImage("src/assets/humidity.png"));
-        humidityImage.setBounds(15,500,74,66);
+        humidityImage.setBounds(15, 500, 74, 66);
         add(humidityImage);
 
-        //humidity text
         JLabel humidityText = new JLabel("<html><b>Humidity</b> 100%</html>");
-        humidityText.setBounds(90,500,85,55);
-        humidityText.setFont(new Font("Dialog", Font.PLAIN,16));
+        humidityText.setBounds(90, 500, 85, 55);
+        humidityText.setFont(new Font("Dialog", Font.PLAIN, 16));
         add(humidityText);
 
-        // wind speed image
         JLabel windSpeedImage = new JLabel(loadImage("src/assets/windspeed.png"));
-        windSpeedImage.setBounds(220,500,74,66);
+        windSpeedImage.setBounds(220, 500, 74, 66);
         add(windSpeedImage);
 
-        // wind speed text
         JLabel windSpeedText = new JLabel("<html><b>Windspeed</b> 15km/h</html>");
-        windSpeedText.setBounds(310,500,85,55);
-        windSpeedText.setFont(new Font("Dialog",Font.PLAIN,16));
+        windSpeedText.setBounds(310, 500, 85, 55);
+        windSpeedText.setFont(new Font("Dialog", Font.PLAIN, 16));
         add(windSpeedText);
 
         JButton searchButton = new JButton(loadImage("src/assets/search.png"));
-
-
-        // Change cursor to a hand cursor
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        searchButton.setBounds(375,13,47,45);
+        searchButton.setBounds(375, 13, 47, 45);
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -141,21 +116,82 @@ public class WeatherAppGui extends JFrame {
                 windSpeedText.setText("<html><b>Windspeed</b> " + windspeed + "km/h</html>");
             }
         });
-
         add(searchButton);
+
+        String[] themeOptions = {"Default", "Green", "Light"};
+        JComboBox<String> themeDropdown = new JComboBox<>(themeOptions);
+        themeDropdown.setBounds(15, 60, 100, 25);
+        themeDropdown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedTheme = (String) themeDropdown.getSelectedItem();
+                applySelectedTheme(selectedTheme);
+            }
+        });
+        add(themeDropdown);
     }
 
-    //used to create images in our gui components
-    private ImageIcon loadImage(String resourcePath){
+    private void applySelectedTheme(String selectedTheme) {
+        // Logic to determine and apply the selected theme
+        Theme theme;
+        switch (selectedTheme) {
+            case "Green":
+                theme = createGreenTheme();
+                break;
+            case "Light":
+                theme = createLightTheme();
+                break;
+            default:
+                theme = createDefaultTheme();
+                break;
+        }
+
+        setTheme(theme);
+    }
+
+    private ImageIcon loadImage(String resourcePath) {
         try {
             // read the image file
             BufferedImage image = ImageIO.read(new File(resourcePath));
-
             return new ImageIcon(image);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Could not find resource");
         return null;
+    }
+
+    public void setTheme(Theme theme) {
+        currentTheme = theme;
+
+        // Apply theme to GUI components
+        getContentPane().setBackground(theme.getBackgroundColor());
+        // Apply theme to other components as needed
+        // For example, set text color, font styles, etc.
+    }
+
+    public Theme getCurrentTheme() {
+        return currentTheme;
+    }
+
+    public Theme createDefaultTheme() {
+        Theme theme = new Theme();
+        theme.setBackgroundColor(Color.WHITE);
+        theme.setTextColor(Color.BLACK);
+        return theme;
+    }
+
+    private Theme createGreenTheme() {
+        Theme theme = new Theme();
+        theme.setBackgroundColor(new Color(173, 216, 173)); // Warmer and friendlier green background color
+        theme.setTextColor(Color.WHITE);
+        return theme;
+    }
+
+    private Theme createLightTheme() {
+        Theme theme = new Theme();
+        theme.setBackgroundColor(Color.LIGHT_GRAY);
+        theme.setTextColor(Color.BLACK);
+        return theme;
     }
 }
