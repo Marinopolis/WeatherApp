@@ -5,8 +5,9 @@ public class AppLaunch {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                //display weather app gui
-                new WeatherAppGui().setVisible(true);
+                WeatherAppGui weatherAppGui = new WeatherAppGui();
+                weatherAppGui.setTheme(weatherAppGui.createDefaultTheme());
+                weatherAppGui.setVisible(true);
 
                 System.out.println(WeatherApp.getCurrentTime());
             }
